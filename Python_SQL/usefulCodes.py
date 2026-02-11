@@ -21,3 +21,6 @@ firstRowOnlyThreeColumns = df.iloc[:1, :3]
 #shows the value in the first row and first column of the DataFrame, which can be useful for quickly inspecting a specific
 #data point or understanding the structure of the DataFrame.
 print(df.iloc[0,0])
+
+#shows all the unique owners in the database, which can be useful for filtering or analysis.
+users = pd.read_sql("SELECT DISTINCT [Owner] FROM animals", engine)
