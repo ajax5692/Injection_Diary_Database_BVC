@@ -57,7 +57,6 @@ for _, row in df.iterrows():
         category=row.get('Category')
     )
     session.add(animal)
-    print(row)
 
 session.commit()
 #--------------------------

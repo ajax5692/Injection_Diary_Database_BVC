@@ -14,3 +14,4 @@ df = df.dropna(how='all')  # Drop empty rows
 # This is to cross check how the data read from the excel file looks like
 #print(df.head())  # Inspect columns like Animal number, State, OGR number, Injection Date, etc.
 #print(df)
+aa = []
