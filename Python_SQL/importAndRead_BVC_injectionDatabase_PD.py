@@ -31,4 +31,4 @@ df_joined = pd.read_sql_query(query, con=engine)
 print(df_joined.head(10))
 ##
 
-aa = [];
+aa = []
