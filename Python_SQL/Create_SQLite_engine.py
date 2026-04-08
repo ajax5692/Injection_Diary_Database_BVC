@@ -1,3 +1,8 @@
+# This script creates a SQLite database and populates it with data from an Excel file.
+# It defines the database schema using SQLAlchemy ORM models, establishes relationships
+# between tables, and includes a data cleaning function to handle discrepancies in owner
+# and staff names, ensuring a consistent dataset.
+
 from Read_excel_table import df
 import pandas as pd
 from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, text
