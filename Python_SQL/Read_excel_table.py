@@ -14,4 +14,11 @@ df = df.dropna(how='all')  # Drop empty rows
 # This is to cross check how the data read from the excel file looks like
 #print(df.head())  # Inspect columns like Animal number, State, OGR number, Injection Date, etc.
 #print(df)
-aa = []
+
+# This part is to check if there are any discrepancies between the 'Owner' and 'Injection\nPers.' columns, which should ideally have the same names. This will help us identify any names that need to be added to the name_fixes dictionary in Create_SQLite_engine.py to ensure data consistency when we import it into the database.
+# owners = set(df['Owner'].dropna().unique())
+# injectors = set(df['Injection\nPers.'].dropna().unique())
+
+# # Show me names in injectors that are NOT in owners
+# discrepancies = injectors - owners
+# print("Names to add to your name_fixes dictionary:", discrepancies)
