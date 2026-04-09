@@ -1,0 +1,12 @@
+# Ignore the SQLite database so we don't overwrite live data
+*.db
+
+# Ignore the virtual environment (it's too big and only for your local PC)
+my_venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore the Docker token file if you used Option 2 earlier
+o365_token.txt
