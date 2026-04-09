@@ -1,14 +1,18 @@
 @echo off
-echo Starting Dockerized Database Sync...
+echo Starting Database Sync...
 
-:: 1. Navigate to the folder containing your Docker files
-:: (The %~dp0 guarantees it finds the right folder no matter where you double-click it from)
-cd /d "%~dp0for_docker"
+:: 1. Navigate to your project folder
+cd /d "C:\Users\abhrajyoti.chakrabarti\Documents\GitHub\Injection_Diary_Database_BVC\Python_SQL"
 
-:: 2. Tell Docker to build and run the container
-:: (This replaces the old "python update_DB.py" command)
-docker-compose up --build
+:: 2. Activate the virtual environment
+call my_venv\Scripts\activate.bat
 
-echo.
-echo Sync Complete! 
+:: 3. Run the database update script
+echo Updating SQLite database...
+python update_DB.py
+
+:: 4. Deactivate and close
+deactivate
+echo Sync Complete!
+
 pause
