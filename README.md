@@ -2,6 +2,9 @@
 
 An automated pipeline for synchronizing a local SQLite relational database with a cloud-based Microsoft Excel "Injection Diary." This system allows for structured data management, replacing flat Excel files with a robust SQL backend suitable for Python analytics, DBeaver exploration, and Power BI dashboards.
 
+> [!WARNING]
+> PLEASE MAKE SURE YOU ARE $\color{#f00}{\textsf{DOWNLOADING THE BRANCH LABELLED AS 'docker'}}$ AND NOT THE 'main' BRANCH!!
+
 ### 📊 Database Architecture
 The system transforms flat Excel data into a normalized relational database consisting of five core tables:
 
