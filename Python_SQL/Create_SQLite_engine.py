@@ -40,6 +40,7 @@ class Animal(Base):
     # Set to String in case your IDs have letters (e.g., "M123")
     animal_id = Column(String, primary_key=True) 
     sex = Column(String)
+    line = Column(String)
     arrival_date = Column(Date)
     age_at_arrival = Column(Integer)
     
@@ -75,7 +76,6 @@ class Housing_and_Status(Base):
     state = Column(String)
     category = Column(String)
     box_number = Column(String)
-    line = Column(String)
     
     animal = relationship("Animal", back_populates="housing")
 
@@ -180,6 +180,7 @@ for _, row in df.iterrows():
     animal = Animal(
         animal_id=str(row['animal_number']),
         sex=row.get('sex'),
+        line=row.get('line'),
         arrival_date=row.get('arrival_date'),
         age_at_arrival=row.get('age_(days)'),
         owner=current_owner, # Use the object returned by the function
@@ -191,7 +192,6 @@ for _, row in df.iterrows():
         state=row.get('state'),
         category=row.get('category'),
         box_number=str(row.get('box_#')) if pd.notna(row.get('box_#')) else None,
-        line=row.get('line')
     )
 
     # --- 5G. Attach Injection ---

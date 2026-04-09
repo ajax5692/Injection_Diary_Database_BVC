@@ -41,6 +41,7 @@ class Animal(Base):
     __tablename__ = "animals"
     animal_id = Column(String, primary_key=True) 
     sex = Column(String)
+    line = Column(String)
     arrival_date = Column(Date)
     age_at_arrival = Column(Integer)
     
@@ -75,7 +76,6 @@ class Housing_and_Status(Base):
     state = Column(String)
     category = Column(String)
     box_number = Column(String)
-    line = Column(String)
     
     animal = relationship("Animal", back_populates="housing")
 
@@ -104,6 +104,9 @@ if 'animal_number' in df.columns:
 for date_col in ['arrival_date', 'injection_date', 'surgery_date', 'drop_out_date']:
     if date_col in df.columns:
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce').dt.date
+        
+# --- ADD THIS LINE TO FIX THE NaN ERROR ---
+df = df.where(pd.notna(df), None)
 
 # --------------------------
 # 5. Database Insertion Logic
