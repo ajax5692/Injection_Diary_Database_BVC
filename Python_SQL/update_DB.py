@@ -12,8 +12,14 @@ from sqlalchemy.orm import declarative_base, relationship, Session
 base_dir = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(base_dir, "injection_diary.db")
 
-# Read the local Excel file (this is the file fetch_excel.py downloads)
-excel_path = r"C:\Users\abhrajyoti.chakrabarti\OneDrive - Femtonics Kft\Documents - 2pteam\Tables\Injection diary.xlsx"
+# 1. Ask the system for the path (Docker will provide this!)
+# 2. If it's blank (running locally), fall back to the Windows path.
+excel_path = os.getenv(
+    'EXCEL_SOURCE', 
+    r"C:\Users\abhrajyoti.chakrabarti\OneDrive - Femtonics Kft\Documents - 2pteam\Tables\Injection diary.xlsx"
+)
+
+db_path = os.getenv('DB_DESTINATION', os.path.join(os.getcwd(), "injection_diary.db"))
 
 engine = create_engine(f"sqlite:///{db_path}", echo=False)
 Base = declarative_base()
