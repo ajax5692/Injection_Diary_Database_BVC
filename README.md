@@ -16,10 +16,10 @@ The system transforms flat Excel data into a normalized relational database cons
 
 
 ### 🛠 Prerequisites
-Before running the synchronization, ensure your environment meets the following requirements:  
+Before running the synchronization, ensure you download the follwing softwares:  
 1. OneDrive [(link)](https://www.microsoft.com/en-us/microsoft-365/onedrive/download)
 2. Docker desktop [(link)](https://www.docker.com/products/docker-desktop/).  I have attached a screenshot for new users to figure out which docker desktop software should be downloaded.
-![](https://github.com/ajax5692/Injection_Diary_Database_BVC/blob/docker/Python_SQL/whichDockerDesktopSoftware.png)
+<img src="https://github.com/ajax5692/Injection_Diary_Database_BVC/blob/docker/Python_SQL/whichDockerDesktopSoftware.png" width="600">
 
 🚀 $\color{#f00}{\textsf{Getting Started}}$ 
 
