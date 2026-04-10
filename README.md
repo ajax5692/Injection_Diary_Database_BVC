@@ -21,7 +21,8 @@ Before running the synchronization, ensure you download the follwing softwares:
 2. Docker desktop [(link)](https://www.docker.com/products/docker-desktop/).  I have attached a screenshot for new users to figure out which docker desktop software should be downloaded.
 <img src="https://github.com/ajax5692/Injection_Diary_Database_BVC/blob/docker/Python_SQL/whichDockerDesktopSoftware.png" width="600">
 
-🚀 $\color{#f00}{\textsf{Getting Started}}$ 
+🚀 $\color{#f00}{\textsf{Getting Started}}$  
+Please check this [manual](https://github.com/ajax5692/Injection_Diary_Database_BVC/blob/docker/Python_SQL/Run%20Manual.pdf) explaining step by step instructions for how to install and get things running.
 
 ### 🔍 Data Usage & Analytics  
 Once the injection_diary.db file is updated, you can connect to it using:  
