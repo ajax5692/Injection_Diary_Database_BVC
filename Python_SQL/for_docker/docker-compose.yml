@@ -6,9 +6,10 @@ services:
     volumes:
       # Link your Python_SQL folder so the DB file is saved locally
       - ..:/app
-      # Link your OneDrive folder so the container can see the Excel file
-      # Update the path below if your username is different!
-      - "C:/Users/abhrajyoti.chakrabarti/OneDrive - Femtonics Kft/Documents - 2pteam/Tables:/app/data:ro"
+      
+      # DYNAMIC PATH: Automatically grabs the current Windows user's folder!
+      - "${USERPROFILE}/OneDrive - Femtonics Kft/Documents - 2pteam/Tables:/app/data:ro"
+      
     environment:
       # These tell the script where to find things inside the container's logic
       - EXCEL_SOURCE=/app/data/Injection diary.xlsx
