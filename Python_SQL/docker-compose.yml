@@ -1,27 +1,34 @@
 services:
   # 1. The Python Data Engine
   data_engine:
+    image: bvc-inj-diary-python-engine:latest
+    container_name: bvc_db_update_engine
     build:
       context: ./data_engine
       dockerfile: Dockerfile.python
     volumes:
       - ./data:/app/data
-      # CHANGE THIS PATH to your actual OneDrive folder location:
-      - "C:/Users/abhrajyoti.chakrabarti/OneDrive - Femtonics Kft/Documents - 2pteam/Tables:/onedrive"
+      # Wrapped in quotes to handle spaces in OneDrive path correctly
+      - "C:/Users/abhrajyoti.chakrabarti/OneDrive - Femtonics Kft/2pteam - Documents/Tables:/onedrive"
     environment:
       - EXCEL_SOURCE=/onedrive/Injection diary.xlsx
       - DB_DESTINATION=/app/data/injection_diary.db
 
   # 2. The Node.js Web Server (Query Tool)
   web_server:
+    image: bvc-inj-diary-web-ui:latest
+    container_name: bvc_inj_db_web_portal
     build:
       context: ./web_server
-      dockerfile: Dockerfile.node # Make sure you have this in web_server folder
+      dockerfile: Dockerfile.node
     ports:
       - "3000:3000"
     volumes:
-      - ./data:/app/data
       - ./web_server:/app
+      - ./data:/app/data
+      # IMPORTANT: This prevents your local empty web_server folder 
+      # from overwriting the node_modules installed during build.
+      - /app/node_modules
     environment:
       - DB_PATH=/app/data/injection_diary.db
     depends_on:
