@@ -8,19 +8,25 @@ from sqlalchemy.orm import declarative_base, relationship, Session
 # --------------------------
 # 1. Setup File Paths & Engine
 # --------------------------
-# Automatically finds the folder where THIS script is saved
+# Get the absolute path of the script's directory (Python_SQL/data_engine/scripts)
 base_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(base_dir, "injection_diary.db")
 
-# 1. Ask the system for the path (Docker will provide this!)
-# 2. If it's blank (running locally), fall back to the Windows path.
+# Move up two levels to reach the root, then into 'data'
+default_db_path = os.path.abspath(os.path.join(base_dir, '..', '..', 'data', 'injection_diary.db'))
+
+# 1. Check for Environment Variables (Set by Docker)
+# 2. Fall back to the relative path logic for local VS Code runs
 excel_path = os.getenv(
     'EXCEL_SOURCE', 
     r"C:\Users\abhrajyoti.chakrabarti\OneDrive - Femtonics Kft\Documents - 2pteam\Tables\Injection diary.xlsx"
 )
 
-db_path = os.getenv('DB_DESTINATION', os.path.join(os.getcwd(), "injection_diary.db"))
+# Use the environment variable if present, otherwise use our calculated relative path
+db_path = os.getenv('DB_DESTINATION', default_db_path)
 
+print(f"Connecting to database at: {db_path}")
+
+# SQLite needs 4 slashes for an absolute path on Windows/Linux to be safe
 engine = create_engine(f"sqlite:///{db_path}", echo=False)
 Base = declarative_base()
 

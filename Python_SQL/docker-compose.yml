@@ -1,16 +1,28 @@
 services:
-  db_sync:
-    build: 
-      context: ..
-      dockerfile: for_docker/Dockerfile
+  # 1. The Python Data Engine
+  data_engine:
+    build:
+      context: ./data_engine
+      dockerfile: Dockerfile.python
     volumes:
-      # Link your Python_SQL folder so the DB file is saved locally
-      - ..:/app
-      
-      # DYNAMIC PATH: Automatically grabs the current Windows user's folder!
-      - "${USERPROFILE}/OneDrive - Femtonics Kft/2pteam - Documents/Tables:/app/data:ro"
-      
+      - ./data:/app/data
+      # CHANGE THIS PATH to your actual OneDrive folder location:
+      - "C:/Users/abhrajyoti.chakrabarti/OneDrive - Femtonics Kft/Documents - 2pteam/Tables:/onedrive"
     environment:
-      # These tell the script where to find things inside the container's logic
-      - EXCEL_SOURCE=/app/data/Injection diary.xlsx
-      - DB_DESTINATION=/app/injection_diary.db
+      - EXCEL_SOURCE=/onedrive/Injection diary.xlsx
+      - DB_DESTINATION=/app/data/injection_diary.db
+
+  # 2. The Node.js Web Server (Query Tool)
+  web_server:
+    build:
+      context: ./web_server
+      dockerfile: Dockerfile.node # Make sure you have this in web_server folder
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+      - ./web_server:/app
+    environment:
+      - DB_PATH=/app/data/injection_diary.db
+    depends_on:
+      - data_engine

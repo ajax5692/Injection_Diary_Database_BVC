@@ -59,21 +59,35 @@
     </div>
 
 <script>
-    function handleLogin() {
-        const idInput = document.getElementById('username').value;
-        const passInput = document.getElementById('password').value;
+    async function handleLogin() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
         const message = document.getElementById('message');
 
-        const validID = "abc.xyz";
-        const validPass = "1234";
+        try {
+            // Talk to the Node.js server
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
 
-        if (idInput === validID && passInput === validPass) {
-            message.style.color = "green";
-            message.innerText = "Login Successful!";
-            // Redirect logic here
-        } else {
-            message.style.color = "red";
-            message.innerText = "Invalid credentials. Try again.";
+            const result = await response.json();
+
+            if (result.success) {
+                message.style.color = "green";
+                message.innerText = "Login Successful! Redirecting...";
+                // After 1 second, go to the query dashboard
+                setTimeout(() => {
+                    window.location.href = result.redirect; 
+                }, 1000);
+            } else {
+                message.style.color = "red";
+                message.innerText = result.message || "Invalid credentials.";
+            }
+        } catch (error) {
+            message.style.color = "orange";
+            message.innerText = "Error connecting to server.";
         }
     }
 </script>
