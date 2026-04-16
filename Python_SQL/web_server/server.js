@@ -19,7 +19,7 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body;
     
     // Hardcoded credentials for your private tool
-    if (username === "abc.xyz" && password === "admin") {
+    if (username === "abc" && password === "admin") {
         res.json({ success: true, redirect: '/dashboard.html' });
     } else {
         res.status(401).json({ success: false, message: "Invalid credentials" });
