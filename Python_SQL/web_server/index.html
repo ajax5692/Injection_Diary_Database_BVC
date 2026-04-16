@@ -1,96 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Login</title>
-    <style>
-        /* 1. Ensure the body stacks everything in the center of the screen */
-        body { 
-            font-family: sans-serif; 
-            display: flex; 
-            flex-direction: column; /* Stacks items vertically */
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            background: #4b4e52; 
-            margin: 0;
-        }
-
-        /* 2. Style the Title Card */
-        .welcome-card { 
-            background: white; 
-            padding: 1.5rem 2rem; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-            width: 300px; 
-            margin-bottom: 1rem; 
-            text-align: center; /* Centers the text inside the card */
-        }
-
-        /* 3. Style the Login Card */
-        .login-card { 
-            background: white; 
-            padding: 2rem; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-            width: 300px; 
-        }
-
-        h2 { margin: 0 0 1rem 0; font-size: 1.5rem; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #0056b3; }
-        #message { margin-top: 15px; text-align: center; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
-
-    <div class="welcome-card">
-        <h2>BVC Injection Diary Database</h2>
-    </div>
-
-    <div class="login-card">
-        <h2 style="text-align: center;">Login</h2>
-        <input type="text" id="username" placeholder="user.name">
-        <input type="password" id="password" placeholder="password">
-        <button onclick="handleLogin()">Sign In</button>
-        <p id="message"></p>
-    </div>
-
-<script>
-    async function handleLogin() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const message = document.getElementById('message');
-
-        try {
-            // Talk to the Node.js server
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                message.style.color = "green";
-                message.innerText = "Login Successful! Redirecting...";
-                // After 1 second, go to the query dashboard
-                setTimeout(() => {
-                    window.location.href = result.redirect; 
-                }, 1000);
-            } else {
-                message.style.color = "red";
-                message.innerText = result.message || "Invalid credentials.";
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Simple Login</title>
+        <style>
+            /* 1. Ensure the body stacks everything in the center of the screen */
+            body { 
+                font-family: sans-serif; 
+                display: flex; 
+                flex-direction: column; /* Stacks items vertically */
+                justify-content: center; 
+                align-items: center; 
+                height: 100vh; 
+                background: #4b4e52; 
+                margin: 0;
             }
-        } catch (error) {
-            message.style.color = "orange";
-            message.innerText = "Error connecting to server.";
-        }
-    }
-</script>
 
-</body>
+            /* 2. Style the Title Card */
+            .welcome-card { 
+                background: white; 
+                padding: 1.5rem 2rem; 
+                border-radius: 8px; 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+                width: 300px; 
+                margin-bottom: 1rem; 
+                text-align: center; /* Centers the text inside the card */
+            }
+
+            /* 3. Style the Login Card */
+            .login-card { 
+                background: white; 
+                padding: 2rem; 
+                border-radius: 8px; 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+                width: 300px; 
+            }
+
+            h2 { margin: 0 0 1rem 0; font-size: 1.5rem; }
+            input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+            button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+            button:hover { background: #0056b3; }
+            #message { margin-top: 15px; text-align: center; font-size: 0.9rem; }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="welcome-card">
+            <h2>BVC Injection Diary Database</h2>
+        </div>
+
+        <div class="login-card">
+            <h2 style="text-align: center;">Login</h2>
+            <input type="text" id="username" placeholder="user.name">
+            <input type="password" id="password" placeholder="password">
+            <button onclick="handleLogin()">Sign In</button>
+            <p id="message"></p>
+        </div>
+
+        <script>
+            async function handleLogin() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const message = document.getElementById('message');
+
+                try {
+                    // Talk to the Node.js server
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        message.style.color = "green";
+                        message.innerText = "Login Successful! Redirecting...";
+                        // After 1 second, go to the query dashboard
+                        setTimeout(() => {
+                            window.location.href = result.redirect; 
+                        }, 1000);
+                    } else {
+                        message.style.color = "red";
+                        message.innerText = result.message || "Invalid credentials.";
+                    }
+                } catch (error) {
+                    message.style.color = "orange";
+                    message.innerText = "Error connecting to server.";
+                }
+            }
+        </script>
+
+    </body>
 </html>
