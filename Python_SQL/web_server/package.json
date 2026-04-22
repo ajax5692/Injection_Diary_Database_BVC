@@ -1,0 +1,10 @@
+{
+  "name": "bvc-web-server",
+  "version": "1.0.0",
+  "description": "Database Query Tool",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6"
+  }
+}

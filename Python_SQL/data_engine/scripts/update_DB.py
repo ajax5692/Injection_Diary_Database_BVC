@@ -8,19 +8,25 @@ from sqlalchemy.orm import declarative_base, relationship, Session
 # --------------------------
 # 1. Setup File Paths & Engine
 # --------------------------
-# Automatically finds the folder where THIS script is saved
+# Get the absolute path of the script's directory (Python_SQL/data_engine/scripts)
 base_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(base_dir, "injection_diary.db")
 
-# 1. Ask the system for the path (Docker will provide this!)
-# 2. If it's blank (running locally), fall back to the Windows path.
+# Move up two levels to reach the root, then into 'data'
+default_db_path = os.path.abspath(os.path.join(base_dir, '..', '..', 'data', 'injection_diary.db'))
+
+# 1. Check for Environment Variables (Set by Docker)
+# 2. Fall back to the relative path logic for local VS Code runs
 excel_path = os.getenv(
     'EXCEL_SOURCE', 
-    r"C:\Users\abhrajyoti.chakrabarti\OneDrive - Femtonics Kft\Documents - 2pteam\Tables\Injection diary.xlsx"
+    r"C:\Users\abhrajyoti.chakrabarti\OneDrive - Femtonics Kft\2pteam - Documents\Tables\Injection diary.xlsx"
 )
 
-db_path = os.getenv('DB_DESTINATION', os.path.join(os.getcwd(), "injection_diary.db"))
+# Use the environment variable if present, otherwise use our calculated relative path
+db_path = os.getenv('DB_DESTINATION', default_db_path)
 
+print(f"Connecting to database at: {db_path}")
+
+# SQLite needs 4 slashes for an absolute path on Windows/Linux to be safe
 engine = create_engine(f"sqlite:///{db_path}", echo=False)
 Base = declarative_base()
 
@@ -96,23 +102,35 @@ with engine.connect() as conn:
 # 4. Load & Clean Excel Data
 # --------------------------
 print("Loading Excel data...")
-# Make sure your sheet_name and skiprows match your actual Excel file format
 df = pd.read_excel(excel_path, sheet_name='All injections Liliom', skiprows=2, header=0)
 
 # Remove unnamed columns and standardize names
 df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 df = df.rename(columns=lambda x: str(x).strip().replace(' ', '_').replace('\n', '_').lower())
 
+# 1. Convert entire DataFrame to 'object' type FIRST.
+# This strictly prevents Pandas from forcing missing numbers into float 'NaN's
+df = df.astype(object)
+
 if 'animal_number' in df.columns:
     df['animal_number'] = df['animal_number'].astype(str)
 
-# Convert dates
-for date_col in ['arrival_date', 'injection_date', 'surgery_date', 'drop_out_date']:
-    if date_col in df.columns:
-        df[date_col] = pd.to_datetime(df[date_col], errors='coerce').dt.date
-        
-# --- ADD THIS LINE TO FIX THE NaN ERROR ---
-df = df.where(pd.notna(df), None)
+# 2. Safely parse dates
+date_columns = ['arrival_date', 'injection_date', 'surgery_date', 'drop_out_date']
+for col in date_columns:
+    if col in df.columns:
+        df[col] = pd.to_datetime(df[col], errors='coerce')
+        df[col] = df[col].apply(lambda x: x.date() if pd.notnull(x) else None)
+
+# 3. Clean Integer columns
+if 'age_(days)' in df.columns:
+    df['age_(days)'] = df['age_(days)'].apply(lambda x: int(x) if pd.notnull(x) else None)
+
+# 4. THE ULTIMATE NULL DESTROYER
+# Instead of using df.where(), which reverts types, we force every single 
+# pandas 'NA' (NaN, NaT, None) to be a pure Python None, column by column.
+for col in df.columns:
+    df[col] = df[col].apply(lambda x: None if pd.isna(x) else x)
 
 # --------------------------
 # 5. Database Insertion Logic
@@ -176,7 +194,11 @@ def find_best_owner_match(messy_name):
 # 5C. Main Loop
 project_cache = {}
 
-for _, row in df.iterrows():
+for _, raw_row in df.iterrows():
+    # 1. Convert the Pandas Series to a pure Python dictionary
+    # 2. Force any 'nan' or 'NaT' back to None immediately
+    row = {k: (None if pd.isna(v) else v) for k, v in raw_row.items()}
+
     # Resolve People
     current_owner = find_best_owner_match(row.get('owner'))
     current_staff = find_best_owner_match(row.get('injection_pers.'))
