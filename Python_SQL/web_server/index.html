@@ -86,6 +86,7 @@
                         }, 1000);
                     } else {
                         message.style.color = "red";
+                        message.style.fontWeight = "bold";
                         message.innerText = result.message || "Invalid credentials.";
                     }
                 } catch (error) {
